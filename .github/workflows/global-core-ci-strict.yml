@@ -57,7 +57,7 @@ jobs:
           node-version: 24
 
       - name: Install workspace dependencies
-        run: npm install --ignore-scripts
+        run: npm install --ignore-scripts --silent
 
       - name: Check formatting
         run: npm run format:check
