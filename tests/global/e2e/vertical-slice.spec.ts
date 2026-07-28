@@ -43,7 +43,7 @@ test('reorders destinations and replans without touching main', async ({ page })
   const destinations = page.locator('.destination-chip.selected');
   await expect(destinations).toHaveCount(2);
   await destinations.nth(0).dragTo(destinations.nth(1));
-  await expect(page.locator('.day-card').first().getByRole('heading')).toContainText('新加坡');
+  await expect(page.locator('.day-card').first().locator('h3')).toContainText('新加坡');
 });
 
 test('moves and locks POI activities while retaining invariant visibility', async ({ page }) => {
