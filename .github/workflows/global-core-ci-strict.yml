@@ -49,45 +49,66 @@ jobs:
       - name: Checkout exact revision
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
 
+      - name: Prepare evidence directory
+        run: mkdir -p global-ci-evidence
+
       - name: Install workspace dependencies
-        run: npm install --ignore-scripts --silent
+        run: |
+          set -o pipefail
+          npm install --ignore-scripts --silent 2>&1 | tee global-ci-evidence/install.log
 
       - name: Check formatting
-        run: npm run format:check
+        run: |
+          set -o pipefail
+          npm run format:check 2>&1 | tee global-ci-evidence/format.log
 
       - name: Lint global code
-        run: npm run lint
+        run: |
+          set -o pipefail
+          npm run lint 2>&1 | tee global-ci-evidence/lint.log
 
       - name: Typecheck strict TypeScript
-        run: npm run typecheck
+        run: |
+          set -o pipefail
+          npm run typecheck 2>&1 | tee global-ci-evidence/typecheck.log
 
       - name: Validate and export schemas
         run: |
-          npm run schema:validate
-          npm run schema:export
+          set -o pipefail
+          npm run schema:validate 2>&1 | tee global-ci-evidence/schema-validation.log
+          npm run schema:export 2>&1 | tee global-ci-evidence/schema-export.log
 
       - name: Run domain, schema and map unit tests
-        run: npx vitest run packages/domain packages/data-schema packages/map-adapters --config vitest.config.ts
+        run: |
+          set -o pipefail
+          npx vitest run packages/domain packages/data-schema packages/map-adapters --config vitest.config.ts 2>&1 | tee global-ci-evidence/unit.log
 
       - name: Run planner invariant and property tests
-        run: npm run test:planner
+        run: |
+          set -o pipefail
+          npm run test:planner 2>&1 | tee global-ci-evidence/planner.log
 
       - name: Run provider contract tests
-        run: npm run test:providers
+        run: |
+          set -o pipefail
+          npm run test:providers 2>&1 | tee global-ci-evidence/providers.log
 
       - name: Build the Global Web app
-        run: npm run build
+        run: |
+          set -o pipefail
+          npm run build 2>&1 | tee global-ci-evidence/build.log
 
       - name: Enforce bundle budget
         run: |
-          python3 - <<'PY'
+          set -o pipefail
+          python3 - <<'PY' 2>&1 | tee global-ci-evidence/bundle.log
           from pathlib import Path
           import gzip, json
           root = Path('apps/web/dist/assets')
@@ -107,7 +128,8 @@ jobs:
 
       - name: Scan new global code for secrets
         run: |
-          python3 - <<'PY'
+          set -o pipefail
+          python3 - <<'PY' 2>&1 | tee global-ci-evidence/secret-scan.log
           from pathlib import Path
           import re
           roots = [Path('apps'), Path('packages'), Path('fixtures'), Path('scripts/global'), Path('tests/global')]
@@ -120,7 +142,7 @@ jobs:
               'aws-key': re.compile(r'AKIA[0-9A-Z]{16}'),
               'openai-key': re.compile(r'\bsk-[A-Za-z0-9_-]{20,}\b'),
               'nvidia-key': re.compile(r'\bnvapi-[A-Za-z0-9_-]{20,}\b'),
-              'amap-literal': re.compile(r'(?:AMAP|amap).{0,30}(?:key|code).{0,10}[=:]\s*[\"\'][A-Za-z0-9_-]{12,}[\"\']', re.I),
+              'amap-literal': re.compile(r'(?:AMAP|amap).{0,30}(?:key|code).{0,10}[=:]\s*["\'][A-Za-z0-9_-]{12,}["\']', re.I),
           }
           findings = []
           for path in files:
@@ -134,19 +156,24 @@ jobs:
           if findings:
               print('\n'.join(findings))
               raise SystemExit('Potential secrets found in Global Core')
-          print(f'Secret scan passed for {len(files)} files; legacy directories remain registered separately as R-001.')
+          print(f'Secret scan passed for {len(files)} files; legacy credential risk is explicitly deferred by repository owner.')
           PY
 
       - name: Verify build did not modify tracked source
         run: |
-          git status --short --untracked-files=no
+          set -o pipefail
+          git status --short --untracked-files=no | tee global-ci-evidence/tracked-status.log
           test -z "$(git status --short --untracked-files=no)"
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium webkit
+        run: |
+          set -o pipefail
+          npx playwright install --with-deps chromium webkit 2>&1 | tee global-ci-evidence/playwright-install.log
 
       - name: Run E2E and Pages base-path smoke tests
-        run: npm run test:e2e:global
+        run: |
+          set -o pipefail
+          npm run test:e2e:global 2>&1 | tee global-ci-evidence/e2e.log
 
       - name: Upload verified build and reports
         if: always()
@@ -154,6 +181,7 @@ jobs:
         with:
           name: global-core-strict-artifacts
           path: |
+            global-ci-evidence
             package-lock.json
             apps/web/dist
             .generated/json-schema
