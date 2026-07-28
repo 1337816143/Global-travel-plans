@@ -1,9 +1,9 @@
 name: Diagnose Global lint
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
+      - refactor/global-core-phase-1
     paths:
       - '.github/workflows/diagnose-lint.yml'
   workflow_dispatch:
