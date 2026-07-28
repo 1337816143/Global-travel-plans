@@ -200,7 +200,7 @@ export function buildBounds(coordinates: Wgs84Coordinate[]): BoundingBox | undef
 
 export function wgs84ToGcj02(coordinate: Wgs84Coordinate): Wgs84Coordinate {
   const { lng, lat } = coordinate;
-  if (outsideChina(lng, lat)) return { ...coordinate };
+  if (outsideMainlandChina(lng, lat)) return { ...coordinate };
   const a = 6_378_245;
   const ee = 0.006693421622965943;
   let dLat = transformLat(lng - 105, lat - 35);
@@ -215,7 +215,7 @@ export function wgs84ToGcj02(coordinate: Wgs84Coordinate): Wgs84Coordinate {
 }
 
 export function gcj02ToWgs84(coordinate: Wgs84Coordinate): Wgs84Coordinate {
-  if (outsideChina(coordinate.lng, coordinate.lat)) return { ...coordinate };
+  if (outsideMainlandChina(coordinate.lng, coordinate.lat)) return { ...coordinate };
   let estimate = { ...coordinate };
   for (let index = 0; index < 6; index += 1) {
     const converted = wgs84ToGcj02(estimate);
@@ -227,8 +227,74 @@ export function gcj02ToWgs84(coordinate: Wgs84Coordinate): Wgs84Coordinate {
   return estimate;
 }
 
-function outsideChina(lng: number, lat: number): boolean {
-  return lng < 72.004 || lng > 137.8347 || lat < 0.8293 || lat > 55.8271;
+type PolygonPoint = readonly [lng: number, lat: number];
+
+const MAINLAND_CHINA_APPROXIMATION: readonly PolygonPoint[] = [
+  [73.5, 39],
+  [75, 36],
+  [78, 34],
+  [79.5, 31],
+  [82, 30],
+  [86, 28.5],
+  [90, 28.2],
+  [94, 28],
+  [97, 25.5],
+  [100, 23],
+  [103, 22],
+  [106, 21.5],
+  [108.5, 21],
+  [110, 20],
+  [113, 21.5],
+  [116, 22.5],
+  [118.5, 24],
+  [120.5, 27],
+  [122, 31],
+  [121.5, 35],
+  [124, 40],
+  [128, 41.5],
+  [132, 44],
+  [134, 48],
+  [130, 50],
+  [125, 53.5],
+  [120, 52],
+  [116, 49],
+  [111, 47],
+  [107, 44],
+  [102, 42.5],
+  [97, 43],
+  [92, 45],
+  [87, 48],
+  [82, 49],
+  [78, 47],
+  [75, 44],
+];
+
+const HAINAN_APPROXIMATION: readonly PolygonPoint[] = [
+  [108.4, 18],
+  [111.4, 18],
+  [111.4, 20.5],
+  [108.4, 20.5],
+];
+
+function outsideMainlandChina(lng: number, lat: number): boolean {
+  if (lng < 73 || lng > 135 || lat < 18 || lat > 54) return true;
+  return (
+    !pointInPolygon(lng, lat, MAINLAND_CHINA_APPROXIMATION) &&
+    !pointInPolygon(lng, lat, HAINAN_APPROXIMATION)
+  );
+}
+
+function pointInPolygon(lng: number, lat: number, polygon: readonly PolygonPoint[]): boolean {
+  let inside = false;
+  for (let current = 0, previous = polygon.length - 1; current < polygon.length; previous = current, current += 1) {
+    const [currentLng, currentLat] = polygon[current]!;
+    const [previousLng, previousLat] = polygon[previous]!;
+    const crossesLatitude = currentLat > lat !== previousLat > lat;
+    if (!crossesLatitude) continue;
+    const borderLng = ((previousLng - currentLng) * (lat - currentLat)) / (previousLat - currentLat) + currentLng;
+    if (lng < borderLng) inside = !inside;
+  }
+  return inside;
 }
 
 function transformLat(x: number, y: number): number {
