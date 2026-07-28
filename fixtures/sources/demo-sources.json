@@ -1,0 +1,38 @@
+[
+  {
+    "id": "source:legacy-qingdao-v2.4",
+    "title": "Qingdao v2.4 legacy baseline fixture",
+    "url": "https://github.com/1337816143/Global-travel-plans/tree/legacy-qingdao-v2.4-baseline",
+    "publisher": "Global Travel Plans repository",
+    "sourceType": "manual-review",
+    "retrievedAt": "2026-07-28T00:00:00.000Z",
+    "reviewedAt": "2026-07-28T00:00:00.000Z",
+    "reviewer": "Phase 1 fixture review",
+    "confidence": "medium",
+    "licenseNotes": "Demo fixture derived from the preserved legacy repository. It is not a claim of current operating hours, prices or availability."
+  },
+  {
+    "id": "source:demo-singapore-manual",
+    "title": "Singapore cross-timezone demo fixture",
+    "url": "https://github.com/1337816143/Global-travel-plans/tree/refactor/global-core-phase-1/fixtures/destinations",
+    "publisher": "Global Travel Plans repository",
+    "sourceType": "manual-review",
+    "retrievedAt": "2026-07-28T00:00:00.000Z",
+    "reviewedAt": "2026-07-28T00:00:00.000Z",
+    "reviewer": "Phase 1 fixture review",
+    "confidence": "low",
+    "licenseNotes": "Synthetic, manually reviewed data for architecture and planner testing only. Recheck all facts before travel."
+  },
+  {
+    "id": "source:planner-estimate-fixture",
+    "title": "Planner estimate fixture",
+    "url": "https://github.com/1337816143/Global-travel-plans/blob/refactor/global-core-phase-1/docs/architecture/planner-pipeline.md",
+    "publisher": "Global Travel Plans repository",
+    "sourceType": "manual-review",
+    "retrievedAt": "2026-07-28T00:00:00.000Z",
+    "reviewedAt": "2026-07-28T00:00:00.000Z",
+    "reviewer": "Phase 1 architecture review",
+    "confidence": "low",
+    "licenseNotes": "Estimated durations and distances are explicitly labelled and must not be presented as measured routes."
+  }
+]

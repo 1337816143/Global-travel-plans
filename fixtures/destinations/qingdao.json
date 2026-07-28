@@ -1,0 +1,113 @@
+{
+  "place": {
+    "id": "place:cn-qingdao",
+    "names": { "zh-CN": "青岛", "en": "Qingdao" },
+    "type": "locality",
+    "countryCode": "CN",
+    "adminLevel": 2,
+    "coordinates": { "lat": 36.0671, "lng": 120.3826 },
+    "bbox": [119.8, 35.5, 121.0, 36.7],
+    "timezoneIds": ["Asia/Shanghai"],
+    "currencies": ["CNY"],
+    "languages": ["zh-CN", "en"],
+    "sourceRefs": ["source:legacy-qingdao-v2.4"],
+    "schemaVersion": 1
+  },
+  "planningUnits": [
+    {
+      "id": "unit:qingdao-coast",
+      "placeId": "place:cn-qingdao",
+      "names": { "zh-CN": "市南沿海核心区", "en": "Shinan coastal core" },
+      "recommendedDays": { "min": 2, "ideal": 3, "max": 5 },
+      "poiIds": [
+        "poi:qingdao-may-fourth-square",
+        "poi:qingdao-beer-museum",
+        "poi:qingdao-badaguan"
+      ],
+      "transportNotes": {
+        "zh-CN": "演示数据：优先公共交通，短距离步行；实际路线需复核。",
+        "en": "Demo data: prefer transit and short walks; verify actual routes."
+      },
+      "customs": [],
+      "safetyNotes": [
+        {
+          "zh-CN": "夏季户外活动避开正午暴晒。",
+          "en": "Avoid prolonged outdoor exposure around midday in summer."
+        }
+      ],
+      "accommodationScore": 9,
+      "sourceRefs": ["source:legacy-qingdao-v2.4"]
+    }
+  ],
+  "pois": [
+    {
+      "id": "poi:qingdao-may-fourth-square",
+      "placeId": "place:cn-qingdao",
+      "planningUnitId": "unit:qingdao-coast",
+      "names": { "zh-CN": "五四广场", "en": "May Fourth Square" },
+      "coordinates": { "lat": 36.0612, "lng": 120.3844 },
+      "categories": ["landmark", "coast", "photography"],
+      "recommendedDurationMinutes": { "min": 60, "ideal": 90, "max": 120 },
+      "openingHours": {
+        "timezoneId": "Asia/Shanghai",
+        "weekly": [{ "daysOfWeek": [0, 1, 2, 3, 4, 5, 6], "windows": [{ "start": "06:00", "end": "22:00" }] }],
+        "uncertainty": "estimated"
+      },
+      "preferredWindows": [{ "start": "16:00", "end": "20:00" }],
+      "reservationRequirement": "not-required",
+      "indoorLevel": "outdoor",
+      "accessibility": "accessible",
+      "physicalIntensity": 1,
+      "suitableWeather": ["clear", "cloudy"],
+      "sourceRefs": ["source:legacy-qingdao-v2.4"],
+      "updatedAt": "2026-07-28T00:00:00.000Z",
+      "uncertainty": "estimated"
+    },
+    {
+      "id": "poi:qingdao-beer-museum",
+      "placeId": "place:cn-qingdao",
+      "planningUnitId": "unit:qingdao-coast",
+      "names": { "zh-CN": "青岛啤酒博物馆", "en": "Tsingtao Beer Museum" },
+      "coordinates": { "lat": 36.0875, "lng": 120.3287 },
+      "categories": ["museum", "culture", "food"],
+      "recommendedDurationMinutes": { "min": 90, "ideal": 120, "max": 180 },
+      "openingHours": {
+        "timezoneId": "Asia/Shanghai",
+        "weekly": [{ "daysOfWeek": [0, 1, 2, 3, 4, 5, 6], "windows": [{ "start": "09:00", "end": "17:00" }] }],
+        "uncertainty": "estimated"
+      },
+      "preferredWindows": [{ "start": "09:00", "end": "12:00" }],
+      "reservationRequirement": "recommended",
+      "indoorLevel": "mostly-indoor",
+      "accessibility": "partial",
+      "physicalIntensity": 2,
+      "suitableWeather": ["any"],
+      "sourceRefs": ["source:legacy-qingdao-v2.4"],
+      "updatedAt": "2026-07-28T00:00:00.000Z",
+      "uncertainty": "estimated"
+    },
+    {
+      "id": "poi:qingdao-badaguan",
+      "placeId": "place:cn-qingdao",
+      "planningUnitId": "unit:qingdao-coast",
+      "names": { "zh-CN": "八大关", "en": "Badaguan Scenic Area" },
+      "coordinates": { "lat": 36.0527, "lng": 120.3505 },
+      "categories": ["architecture", "walking", "photography"],
+      "recommendedDurationMinutes": { "min": 90, "ideal": 120, "max": 180 },
+      "openingHours": {
+        "timezoneId": "Asia/Shanghai",
+        "weekly": [{ "daysOfWeek": [0, 1, 2, 3, 4, 5, 6], "windows": [{ "start": "07:00", "end": "20:00" }] }],
+        "uncertainty": "estimated"
+      },
+      "preferredWindows": [{ "start": "08:00", "end": "11:00" }],
+      "reservationRequirement": "not-required",
+      "indoorLevel": "mostly-outdoor",
+      "accessibility": "partial",
+      "physicalIntensity": 2,
+      "suitableWeather": ["clear", "cloudy"],
+      "sourceRefs": ["source:legacy-qingdao-v2.4"],
+      "updatedAt": "2026-07-28T00:00:00.000Z",
+      "uncertainty": "estimated"
+    }
+  ]
+}

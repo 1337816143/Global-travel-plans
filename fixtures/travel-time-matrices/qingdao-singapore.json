@@ -1,0 +1,17 @@
+{
+  "version": "demo-matrix-1",
+  "entries": [
+    { "fromPoiId": "poi:qingdao-may-fourth-square", "toPoiId": "poi:qingdao-beer-museum", "mode": "transit", "durationMinutes": 35, "distanceMeters": 7200, "method": "estimate", "confidence": "low", "sourceRefs": ["source:planner-estimate-fixture"] },
+    { "fromPoiId": "poi:qingdao-beer-museum", "toPoiId": "poi:qingdao-may-fourth-square", "mode": "transit", "durationMinutes": 35, "distanceMeters": 7200, "method": "estimate", "confidence": "low", "sourceRefs": ["source:planner-estimate-fixture"] },
+    { "fromPoiId": "poi:qingdao-may-fourth-square", "toPoiId": "poi:qingdao-badaguan", "mode": "transit", "durationMinutes": 25, "distanceMeters": 4300, "method": "estimate", "confidence": "low", "sourceRefs": ["source:planner-estimate-fixture"] },
+    { "fromPoiId": "poi:qingdao-badaguan", "toPoiId": "poi:qingdao-may-fourth-square", "mode": "transit", "durationMinutes": 25, "distanceMeters": 4300, "method": "estimate", "confidence": "low", "sourceRefs": ["source:planner-estimate-fixture"] },
+    { "fromPoiId": "poi:qingdao-beer-museum", "toPoiId": "poi:qingdao-badaguan", "mode": "transit", "durationMinutes": 30, "distanceMeters": 5600, "method": "estimate", "confidence": "low", "sourceRefs": ["source:planner-estimate-fixture"] },
+    { "fromPoiId": "poi:qingdao-badaguan", "toPoiId": "poi:qingdao-beer-museum", "mode": "transit", "durationMinutes": 30, "distanceMeters": 5600, "method": "estimate", "confidence": "low", "sourceRefs": ["source:planner-estimate-fixture"] },
+    { "fromPoiId": "poi:singapore-marina-bay", "toPoiId": "poi:singapore-gardens-by-bay", "mode": "walk", "durationMinutes": 18, "distanceMeters": 1400, "method": "estimate", "confidence": "low", "sourceRefs": ["source:planner-estimate-fixture"] },
+    { "fromPoiId": "poi:singapore-gardens-by-bay", "toPoiId": "poi:singapore-marina-bay", "mode": "walk", "durationMinutes": 18, "distanceMeters": 1400, "method": "estimate", "confidence": "low", "sourceRefs": ["source:planner-estimate-fixture"] },
+    { "fromPoiId": "poi:singapore-marina-bay", "toPoiId": "poi:singapore-national-gallery", "mode": "transit", "durationMinutes": 20, "distanceMeters": 2400, "method": "estimate", "confidence": "low", "sourceRefs": ["source:planner-estimate-fixture"] },
+    { "fromPoiId": "poi:singapore-national-gallery", "toPoiId": "poi:singapore-marina-bay", "mode": "transit", "durationMinutes": 20, "distanceMeters": 2400, "method": "estimate", "confidence": "low", "sourceRefs": ["source:planner-estimate-fixture"] },
+    { "fromPoiId": "poi:singapore-gardens-by-bay", "toPoiId": "poi:singapore-national-gallery", "mode": "transit", "durationMinutes": 25, "distanceMeters": 3600, "method": "estimate", "confidence": "low", "sourceRefs": ["source:planner-estimate-fixture"] },
+    { "fromPoiId": "poi:singapore-national-gallery", "toPoiId": "poi:singapore-gardens-by-bay", "mode": "transit", "durationMinutes": 25, "distanceMeters": 3600, "method": "estimate", "confidence": "low", "sourceRefs": ["source:planner-estimate-fixture"] }
+  ]
+}

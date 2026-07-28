@@ -1,0 +1,15 @@
+{
+  "status": "unavailable",
+  "data": null,
+  "providerId": "unavailable-weather",
+  "capabilityId": "weather.forecast",
+  "sourceRefs": [],
+  "stale": false,
+  "cached": false,
+  "error": {
+    "kind": "unsupported",
+    "message": "Weather provider is unavailable in static-only mode.",
+    "retryable": false
+  },
+  "degradation": "The static itinerary remains available without weather enrichment."
+}

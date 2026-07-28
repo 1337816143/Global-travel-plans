@@ -1,0 +1,21 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "localDate": "2026-08-10",
+      "timezoneId": "Asia/Shanghai",
+      "temperatureMinC": 24,
+      "temperatureMaxC": 31,
+      "apparentTemperatureMaxC": 34,
+      "precipitationProbabilityMax": 35,
+      "weatherCode": "fixture-partly-cloudy"
+    }
+  ],
+  "providerId": "fixture-weather",
+  "capabilityId": "weather.forecast",
+  "sourceRefs": ["source:planner-estimate-fixture"],
+  "observedAt": "2026-07-28T00:00:00.000Z",
+  "expiresAt": "2026-07-29T00:00:00.000Z",
+  "stale": false,
+  "cached": false
+}
