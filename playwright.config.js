@@ -5,6 +5,7 @@ const iphoneUA='Mozilla/5.0 (iPhone; CPU iPhone OS 20_0 like Mac OS X) AppleWebK
 
 export default defineConfig({
   testDir:'./tests',
+  testIgnore:'global/**',
   timeout:60_000,
   expect:{timeout:12_000},
   fullyParallel:false,
