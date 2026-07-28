@@ -8,10 +8,18 @@ import {
 } from './index';
 
 describe('map adapter boundary', () => {
-  it('keeps non-China WGS84 coordinates unchanged', () => {
-    const singapore = { lat: 1.3521, lng: 103.8198 };
-    expect(wgs84ToGcj02(singapore)).toEqual(singapore);
-    expect(gcj02ToWgs84(singapore)).toEqual(singapore);
+  it('keeps non-mainland-China WGS84 coordinates unchanged', () => {
+    const overseasCoordinates = [
+      { lat: 1.3521, lng: 103.8198 },
+      { lat: 27.7172, lng: 85.324 },
+      { lat: 37.5665, lng: 126.978 },
+      { lat: 35.6762, lng: 139.6503 },
+    ];
+
+    for (const coordinate of overseasCoordinates) {
+      expect(wgs84ToGcj02(coordinate)).toEqual(coordinate);
+      expect(gcj02ToWgs84(coordinate)).toEqual(coordinate);
+    }
   });
 
   it('round-trips China coordinates with small adapter-boundary error', () => {
