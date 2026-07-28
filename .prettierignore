@@ -1,0 +1,11 @@
+assets/
+src/
+src-v2/
+versions/
+node_modules/
+apps/web/dist/
+.generated/
+coverage/
+playwright-report*/
+test-results*/
+package-lock.json
