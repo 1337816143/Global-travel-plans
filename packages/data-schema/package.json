@@ -8,7 +8,7 @@
     "./travel-time": "./src/travel-time.ts"
   },
   "dependencies": {
-    "@global-travel-plans/domain": "workspace:*",
+    "@global-travel-plans/domain": "0.1.0",
     "zod": "^4.4.3"
   }
 }

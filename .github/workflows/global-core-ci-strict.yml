@@ -1,0 +1,163 @@
+name: Global core strict quality gate
+
+on:
+  push:
+    branches:
+      - refactor/global-core-phase-1
+    paths:
+      - 'apps/**'
+      - 'packages/**'
+      - 'fixtures/**'
+      - 'scripts/global/**'
+      - 'tests/global/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.global.json'
+      - 'eslint.config.js'
+      - 'vitest.config.ts'
+      - 'playwright.global.config.ts'
+      - '.github/workflows/global-core-ci-strict.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'apps/**'
+      - 'packages/**'
+      - 'fixtures/**'
+      - 'scripts/global/**'
+      - 'tests/global/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.global.json'
+      - 'eslint.config.js'
+      - 'vitest.config.ts'
+      - 'playwright.global.config.ts'
+      - '.github/workflows/global-core-ci-strict.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  global-core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install workspace dependencies
+        run: npm install --ignore-scripts
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Lint global code
+        run: npm run lint
+
+      - name: Typecheck strict TypeScript
+        run: npm run typecheck
+
+      - name: Validate and export schemas
+        run: |
+          npm run schema:validate
+          npm run schema:export
+
+      - name: Run domain, schema and map unit tests
+        run: npx vitest run packages/domain packages/data-schema packages/map-adapters --config vitest.config.ts
+
+      - name: Run planner invariant and property tests
+        run: npm run test:planner
+
+      - name: Run provider contract tests
+        run: npm run test:providers
+
+      - name: Build the Global Web app
+        run: npm run build
+
+      - name: Enforce bundle budget
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import gzip, json
+          root = Path('apps/web/dist/assets')
+          files = [path for path in root.rglob('*') if path.is_file()]
+          def compressed(paths):
+              return sum(len(gzip.compress(path.read_bytes(), compresslevel=9, mtime=0)) for path in paths)
+          js = compressed([path for path in files if path.suffix == '.js'])
+          css = compressed([path for path in files if path.suffix == '.css'])
+          total = js + css
+          report = {'jsGzipBytes': js, 'cssGzipBytes': css, 'totalGzipBytes': total, 'budgets': {'js': 184320, 'css': 35840, 'total': 256000}}
+          print(json.dumps(report, indent=2))
+          if not files:
+              raise SystemExit('No built assets found')
+          if js > 184320 or css > 35840 or total > 256000:
+              raise SystemExit('Bundle budget exceeded')
+          PY
+
+      - name: Scan new global code for secrets
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          roots = [Path('apps'), Path('packages'), Path('fixtures'), Path('scripts/global'), Path('tests/global')]
+          files = [Path('.env.example'), Path('package.json'), Path('eslint.config.js'), Path('playwright.global.config.ts'), Path('vitest.config.ts')]
+          for root in roots:
+              files.extend(path for path in root.rglob('*') if path.is_file())
+          patterns = {
+              'private-key': re.compile(r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----'),
+              'github-token': re.compile(r'(?:ghp|github_pat)_[A-Za-z0-9_]{20,}'),
+              'aws-key': re.compile(r'AKIA[0-9A-Z]{16}'),
+              'openai-key': re.compile(r'\bsk-[A-Za-z0-9_-]{20,}\b'),
+              'nvidia-key': re.compile(r'\bnvapi-[A-Za-z0-9_-]{20,}\b'),
+              'amap-literal': re.compile(r'(?:AMAP|amap).{0,30}(?:key|code).{0,10}[=:]\s*[\"\'][A-Za-z0-9_-]{12,}[\"\']', re.I),
+          }
+          findings = []
+          for path in files:
+              try:
+                  text = path.read_text('utf-8')
+              except Exception:
+                  continue
+              for name, pattern in patterns.items():
+                  for match in pattern.finditer(text):
+                      findings.append(f'{path}:{name}:{match.start()}')
+          if findings:
+              print('\n'.join(findings))
+              raise SystemExit('Potential secrets found in Global Core')
+          print(f'Secret scan passed for {len(files)} files; legacy directories remain registered separately as R-001.')
+          PY
+
+      - name: Verify build did not modify tracked source
+        run: |
+          git status --short --untracked-files=no
+          test -z "$(git status --short --untracked-files=no)"
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Run E2E and Pages base-path smoke tests
+        run: npm run test:e2e:global
+
+      - name: Upload verified build and reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: global-core-strict-artifacts
+          path: |
+            package-lock.json
+            apps/web/dist
+            .generated/json-schema
+            playwright-report-global
+            test-results-global
+          if-no-files-found: warn
+          retention-days: 30

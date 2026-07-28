@@ -9,11 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@global-travel-plans/data-schema": "workspace:*",
-    "@global-travel-plans/domain": "workspace:*",
-    "@global-travel-plans/map-adapters": "workspace:*",
-    "@global-travel-plans/planner": "workspace:*",
-    "@global-travel-plans/providers": "workspace:*",
+    "@global-travel-plans/data-schema": "0.1.0",
+    "@global-travel-plans/domain": "0.1.0",
+    "@global-travel-plans/map-adapters": "0.1.0",
+    "@global-travel-plans/planner": "0.1.0",
+    "@global-travel-plans/providers": "0.1.0",
     "i18next": "^26.3.6",
     "leaflet": "1.9.4",
     "react": "^19.2.0",

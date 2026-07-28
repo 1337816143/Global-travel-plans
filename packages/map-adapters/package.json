@@ -5,7 +5,7 @@
   "type": "module",
   "exports": "./src/index.ts",
   "dependencies": {
-    "@global-travel-plans/domain": "workspace:*",
+    "@global-travel-plans/domain": "0.1.0",
     "leaflet": "1.9.4"
   }
 }
