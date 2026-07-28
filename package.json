@@ -26,18 +26,18 @@
     "test:e2e:global": "playwright test -c playwright.global.config.ts"
   },
   "devDependencies": {
-    "@eslint/js": "^10.8.0",
+    "@eslint/js": "9.39.5",
     "@playwright/test": "1.61.1",
     "@types/leaflet": "^1.9.20",
     "@types/node": "^24.0.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "eslint": "^10.8.0",
+    "eslint": "9.39.5",
     "fast-check": "^4.9.0",
     "prettier": "3.9.6",
     "tsx": "^4.20.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.65.0",
+    "typescript-eslint": "8.65.0",
     "vitest": "^4.1.10"
   }
 }
