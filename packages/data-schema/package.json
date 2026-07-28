@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "exports": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./travel-time": "./src/travel-time.ts"
+  },
   "dependencies": {
     "@global-travel-plans/domain": "workspace:*",
     "zod": "^4.4.3"
