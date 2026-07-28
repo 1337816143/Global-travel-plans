@@ -1,0 +1,122 @@
+name: Phase 0 baseline audit
+
+on:
+  push:
+    branches:
+      - refactor/global-core-phase-1
+    paths:
+      - '.github/workflows/phase0-baseline.yml'
+      - 'package.json'
+      - 'playwright.config.js'
+      - 'scripts/**'
+      - 'src-v2/**'
+      - 'tests/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/phase0-baseline.yml'
+      - 'package.json'
+      - 'playwright.config.js'
+      - 'scripts/**'
+      - 'src-v2/**'
+      - 'tests/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  baseline:
+    name: Existing v2.4 baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout requested revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Record environment
+        run: |
+          mkdir -p audit-artifacts
+          {
+            echo "commit=$(git rev-parse HEAD)"
+            echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+            node --version
+            npm --version
+            python3 --version
+          } | tee audit-artifacts/environment.log
+
+      - name: Install existing dependencies
+        id: install
+        continue-on-error: true
+        run: npm install --ignore-scripts 2>&1 | tee audit-artifacts/install.log
+
+      - name: Run existing build command
+        id: build
+        continue-on-error: true
+        run: npm run build:v2 2>&1 | tee audit-artifacts/build.log
+
+      - name: Record build mutations
+        if: always()
+        run: |
+          git status --short | tee audit-artifacts/build-git-status.log
+          git diff --stat | tee audit-artifacts/build-diff-stat.log
+          git diff --name-only | tee audit-artifacts/build-diff-files.log
+
+      - name: Run existing validation command
+        id: validate
+        continue-on-error: true
+        run: npm run validate:v2 2>&1 | tee audit-artifacts/validate.log
+
+      - name: Install Playwright browsers
+        id: browsers
+        continue-on-error: true
+        run: npx playwright install --with-deps chromium webkit 2>&1 | tee audit-artifacts/playwright-install.log
+
+      - name: Run existing Playwright command
+        id: e2e
+        continue-on-error: true
+        run: npm run test:e2e 2>&1 | tee audit-artifacts/playwright.log
+
+      - name: Write machine-readable outcome
+        if: always()
+        run: |
+          cat > audit-artifacts/outcome.json <<'JSON'
+          {
+            "install": "${{ steps.install.outcome }}",
+            "build": "${{ steps.build.outcome }}",
+            "validate": "${{ steps.validate.outcome }}",
+            "playwrightBrowserInstall": "${{ steps.browsers.outcome }}",
+            "e2e": "${{ steps.e2e.outcome }}"
+          }
+          JSON
+          cat audit-artifacts/outcome.json
+
+      - name: Upload Phase 0 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase0-baseline-evidence
+          path: |
+            audit-artifacts
+            playwright-report
+            test-results
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Enforce baseline result
+        if: always()
+        run: |
+          test "${{ steps.install.outcome }}" = success
+          test "${{ steps.build.outcome }}" = success
+          test "${{ steps.validate.outcome }}" = success
+          test "${{ steps.browsers.outcome }}" = success
+          test "${{ steps.e2e.outcome }}" = success
