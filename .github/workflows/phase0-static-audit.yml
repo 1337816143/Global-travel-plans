@@ -1,0 +1,111 @@
+name: Phase 0 static repository audit
+
+on:
+  push:
+    branches:
+      - refactor/global-core-phase-1
+    paths:
+      - '.github/workflows/phase0-static-audit.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/phase0-static-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout full history and tags
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Build repository inventory
+        run: |
+          set -euo pipefail
+          mkdir -p audit-inventory
+          {
+            echo "HEAD=$(git rev-parse HEAD)"
+            echo "MAIN=$(git rev-parse origin/main)"
+            echo "COMMITS=$(git rev-list --count HEAD)"
+            echo "ROOTS=$(git rev-list --max-parents=0 --all | wc -l | tr -d ' ')"
+          } > audit-inventory/git-summary.txt
+          git branch -r --format='%(refname:short) %(objectname)' | sort > audit-inventory/remote-branches.txt
+          git tag --list --format='%(refname:short) %(objectname) %(subject)' | sort > audit-inventory/tags.txt
+          find . -path './.git' -prune -o -path './node_modules' -prune -o -type f -print | sed 's#^./##' | sort > audit-inventory/files.txt
+          find .github/workflows -maxdepth 1 -type f -print | sort > audit-inventory/workflows.txt
+          du -ah --exclude=.git --exclude=node_modules . | sort -h | tail -100 > audit-inventory/largest-paths.txt
+
+      - name: Record redacted coupling and credential indicators
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, re
+
+          root = Path('.')
+          ignored = {'.git', 'node_modules', 'audit-inventory', 'playwright-report', 'test-results'}
+          patterns = {
+              'window-global': re.compile(r'\b(?:window|globalThis)\.'),
+              'dom-access': re.compile(r'\b(?:document\.|getElementById\(|querySelector\()'),
+              'local-storage': re.compile(r'\blocalStorage\b'),
+              'direct-fetch': re.compile(r'\bfetch\s*\('),
+              'jsonp': re.compile(r'jsonp|callback=', re.I),
+              'qingdao-cn': re.compile('青岛'),
+              'qingdao-key': re.compile('qingdao', re.I),
+              'fixed-year-2026': re.compile(r'(?<!\d)2026(?!\d)'),
+              'fixed-shanghai-timezone': re.compile('Asia/Shanghai'),
+              'amap-credential-name': re.compile(r'AMAP_(?:JS_KEY|SECURITY_CODE|WEB_KEY)'),
+              'amap-endpoint': re.compile(r'(?:restapi|webapi)\.amap\.com'),
+              'open-meteo-endpoint': re.compile(r'api\.open-meteo\.com'),
+              'migration-patch': re.compile(r'\.replace(?:All)?\(|patchFirst\(|appendUnique\('),
+          }
+          suffixes = {'.js', '.mjs', '.ts', '.tsx', '.jsx', '.json', '.html', '.css', '.md', '.yml', '.yaml'}
+          counts = {name: 0 for name in patterns}
+          locations = {name: [] for name in patterns}
+          scanned = 0
+          for path in root.rglob('*'):
+              if not path.is_file() or path.suffix.lower() not in suffixes:
+                  continue
+              if any(part in ignored for part in path.parts):
+                  continue
+              try:
+                  text = path.read_text('utf-8')
+              except Exception:
+                  continue
+              scanned += 1
+              for line_no, line in enumerate(text.splitlines(), 1):
+                  for name, pattern in patterns.items():
+                      hits = len(pattern.findall(line))
+                      if not hits:
+                          continue
+                      counts[name] += hits
+                      if len(locations[name]) < 100:
+                          locations[name].append({'file': path.as_posix(), 'line': line_no})
+          report = {'scannedFiles': scanned, 'counts': counts, 'locations': locations, 'valuesRedacted': True}
+          Path('audit-inventory/static-indicators.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', 'utf-8')
+          print(json.dumps({'scannedFiles': scanned, 'counts': counts}, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Record package and build metadata
+        run: |
+          node - <<'NODE' > audit-inventory/package-summary.json
+          const fs=require('fs');
+          const pkg=JSON.parse(fs.readFileSync('package.json','utf8'));
+          console.log(JSON.stringify({name:pkg.name,version:pkg.version,scripts:pkg.scripts||{},dependencies:pkg.dependencies||{},devDependencies:pkg.devDependencies||{},hasPackageLock:fs.existsSync('package-lock.json')},null,2));
+          NODE
+          git status --short > audit-inventory/final-git-status.txt
+
+      - name: Upload repository audit evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase0-static-audit-evidence
+          path: audit-inventory
+          if-no-files-found: error
+          retention-days: 30
