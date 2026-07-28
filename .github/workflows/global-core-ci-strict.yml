@@ -59,10 +59,10 @@ jobs:
       - name: Prepare evidence directory
         run: mkdir -p global-ci-evidence
 
-      - name: Install workspace dependencies
+      - name: Install workspace dependencies from lockfile
         run: |
           set -o pipefail
-          npm install --ignore-scripts --silent 2>&1 | tee global-ci-evidence/install.log
+          npm ci --ignore-scripts --silent 2>&1 | tee global-ci-evidence/install.log
 
       - name: Check formatting
         run: |
