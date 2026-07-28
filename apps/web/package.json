@@ -1,0 +1,26 @@
+{
+  "name": "@global-travel-plans/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@global-travel-plans/data-schema": "workspace:*",
+    "@global-travel-plans/domain": "workspace:*",
+    "@global-travel-plans/map-adapters": "workspace:*",
+    "@global-travel-plans/planner": "workspace:*",
+    "@global-travel-plans/providers": "workspace:*",
+    "i18next": "^26.3.6",
+    "leaflet": "1.9.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-i18next": "^17.0.10"
+  },
+  "devDependencies": {
+    "vite": "^8.1.5"
+  }
+}
