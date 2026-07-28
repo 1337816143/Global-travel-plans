@@ -1,0 +1,11 @@
+node_modules/
+apps/web/dist/
+.generated/
+coverage/
+playwright-report-global/
+test-results-global/
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example

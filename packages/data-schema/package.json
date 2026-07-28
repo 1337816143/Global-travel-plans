@@ -1,0 +1,14 @@
+{
+  "name": "@global-travel-plans/data-schema",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./travel-time": "./src/travel-time.ts"
+  },
+  "dependencies": {
+    "@global-travel-plans/domain": "0.1.0",
+    "zod": "^4.4.3"
+  }
+}

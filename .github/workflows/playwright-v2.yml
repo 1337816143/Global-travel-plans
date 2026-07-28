@@ -10,7 +10,7 @@ on:
       - 'scripts/migrate-v2.4-features.mjs'
       - 'scripts/validate-data-schema.mjs'
       - 'scripts/build-v2.mjs'
-      - 'tests/**'
+      - 'tests/**/*.spec.js'
       - 'package.json'
       - 'playwright.config.js'
       - '.github/workflows/playwright-v2.yml'
@@ -20,7 +20,7 @@ on:
       - 'scripts/migrate-v2.4.mjs'
       - 'scripts/migrate-v2.4-features.mjs'
       - 'scripts/build-v2.mjs'
-      - 'tests/**'
+      - 'tests/**/*.spec.js'
       - 'package.json'
       - 'playwright.config.js'
       - '.github/workflows/playwright-v2.yml'
@@ -32,6 +32,7 @@ permissions:
 jobs:
   visual:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

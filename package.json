@@ -1,15 +1,48 @@
 {
-  "name": "qingdao-travel-plans",
+  "name": "global-travel-plans",
+  "version": "0.1.0",
   "private": true,
-  "version": "2.4.0",
   "type": "module",
+  "packageManager": "npm@11.16.0",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
+    "dev": "npm run dev -w @global-travel-plans/web",
+    "build": "npm run schema:validate && npm run build -w @global-travel-plans/web",
+    "build:global": "npm run build",
     "build:v2": "node scripts/build-v2.mjs",
     "validate:v2": "node scripts/build-v2.mjs && node scripts/validate-v2.mjs",
-    "test:e2e": "playwright test"
+    "format": "prettier --write apps packages fixtures scripts/global tests/global eslint.config.js vitest.config.ts playwright.global.config.ts tsconfig.global.json package.json",
+    "format:check": "prettier --check apps packages fixtures scripts/global tests/global eslint.config.js vitest.config.ts playwright.global.config.ts tsconfig.global.json package.json",
+    "lint": "eslint apps packages fixtures scripts/global tests/global eslint.config.js vitest.config.ts playwright.global.config.ts --max-warnings=0",
+    "typecheck": "tsc -p tsconfig.global.json --noEmit",
+    "schema:validate": "tsx scripts/global/validate-data.ts",
+    "schema:export": "tsx scripts/global/export-json-schema.ts",
+    "test:unit": "vitest run --config vitest.config.ts",
+    "test:planner": "vitest run packages/planner --config vitest.config.ts",
+    "test:providers": "vitest run packages/providers --config vitest.config.ts",
+    "test:global": "npm run test:unit && npm run test:planner && npm run test:providers",
+    "test:e2e": "playwright test",
+    "test:e2e:global": "playwright test -c playwright.global.config.ts"
   },
   "devDependencies": {
+    "@eslint/js": "9.39.5",
     "@playwright/test": "1.61.1",
-    "acorn": "8.15.0"
+    "@types/leaflet": "^1.9.20",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "9.39.5",
+    "fast-check": "^4.9.0",
+    "prettier": "3.9.6",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "8.65.0",
+    "vitest": "^4.1.10"
   }
 }

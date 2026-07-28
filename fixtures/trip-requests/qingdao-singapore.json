@@ -1,0 +1,26 @@
+{
+  "id": "request:qingdao-singapore-demo",
+  "schemaVersion": 1,
+  "destinations": [
+    { "placeId": "place:cn-qingdao", "weight": 1 },
+    { "placeId": "place:sg-singapore", "weight": 1 }
+  ],
+  "startDate": "2026-08-10",
+  "endDate": "2026-08-15",
+  "pace": "relaxed",
+  "budget": "standard",
+  "interests": ["culture", "coast", "museum", "photography"],
+  "physicalLevel": "low",
+  "accessibilityRequired": false,
+  "dailyStartTime": "09:00",
+  "dailyEndTime": "19:00",
+  "mealDurationMinutes": 60,
+  "restDurationMinutes": 30,
+  "transportPreferences": ["transit", "taxi", "walk", "flight"],
+  "accommodationPreference": "minimize-transfers",
+  "mustVisitPoiIds": ["poi:qingdao-beer-museum", "poi:singapore-gardens-by-bay"],
+  "excludedPoiIds": [],
+  "lockedActivities": [],
+  "language": "zh-CN",
+  "currency": "CNY"
+}

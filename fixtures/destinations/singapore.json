@@ -1,0 +1,118 @@
+{
+  "place": {
+    "id": "place:sg-singapore",
+    "names": { "zh-CN": "新加坡", "en": "Singapore" },
+    "type": "country",
+    "countryCode": "SG",
+    "coordinates": { "lat": 1.3521, "lng": 103.8198 },
+    "bbox": [103.6, 1.15, 104.1, 1.48],
+    "timezoneIds": ["Asia/Singapore"],
+    "currencies": ["SGD"],
+    "languages": ["en", "zh-CN"],
+    "sourceRefs": ["source:demo-singapore-manual"],
+    "schemaVersion": 1
+  },
+  "planningUnits": [
+    {
+      "id": "unit:singapore-marina",
+      "placeId": "place:sg-singapore",
+      "names": { "zh-CN": "滨海湾核心区", "en": "Marina Bay core" },
+      "recommendedDays": { "min": 2, "ideal": 3, "max": 5 },
+      "poiIds": [
+        "poi:singapore-marina-bay",
+        "poi:singapore-gardens-by-bay",
+        "poi:singapore-national-gallery"
+      ],
+      "transportNotes": {
+        "zh-CN": "演示数据：以公共交通和短途步行为主，实际班次需复核。",
+        "en": "Demo data: use transit and short walks; verify actual services."
+      },
+      "customs": [],
+      "safetyNotes": [
+        {
+          "zh-CN": "高温高湿时增加室内休息和补水。",
+          "en": "Add indoor rests and hydration in hot, humid conditions."
+        }
+      ],
+      "accommodationScore": 9,
+      "sourceRefs": ["source:demo-singapore-manual"]
+    }
+  ],
+  "pois": [
+    {
+      "id": "poi:singapore-marina-bay",
+      "placeId": "place:sg-singapore",
+      "planningUnitId": "unit:singapore-marina",
+      "names": { "zh-CN": "滨海湾步行区", "en": "Marina Bay promenade" },
+      "coordinates": { "lat": 1.2834, "lng": 103.8607 },
+      "categories": ["landmark", "waterfront", "photography"],
+      "recommendedDurationMinutes": { "min": 60, "ideal": 90, "max": 120 },
+      "openingHours": {
+        "timezoneId": "Asia/Singapore",
+        "weekly": [
+          { "daysOfWeek": [0, 1, 2, 3, 4, 5, 6], "windows": [{ "start": "06:00", "end": "23:00" }] }
+        ],
+        "uncertainty": "estimated"
+      },
+      "preferredWindows": [{ "start": "17:00", "end": "21:00" }],
+      "reservationRequirement": "not-required",
+      "indoorLevel": "outdoor",
+      "accessibility": "accessible",
+      "physicalIntensity": 1,
+      "suitableWeather": ["clear", "cloudy"],
+      "sourceRefs": ["source:demo-singapore-manual"],
+      "updatedAt": "2026-07-28T00:00:00.000Z",
+      "uncertainty": "estimated"
+    },
+    {
+      "id": "poi:singapore-gardens-by-bay",
+      "placeId": "place:sg-singapore",
+      "planningUnitId": "unit:singapore-marina",
+      "names": { "zh-CN": "滨海湾花园", "en": "Gardens by the Bay" },
+      "coordinates": { "lat": 1.2816, "lng": 103.8636 },
+      "categories": ["garden", "nature", "architecture"],
+      "recommendedDurationMinutes": { "min": 120, "ideal": 150, "max": 240 },
+      "openingHours": {
+        "timezoneId": "Asia/Singapore",
+        "weekly": [
+          { "daysOfWeek": [0, 1, 2, 3, 4, 5, 6], "windows": [{ "start": "09:00", "end": "20:00" }] }
+        ],
+        "uncertainty": "estimated"
+      },
+      "preferredWindows": [{ "start": "15:00", "end": "19:30" }],
+      "reservationRequirement": "recommended",
+      "indoorLevel": "mixed",
+      "accessibility": "accessible",
+      "physicalIntensity": 2,
+      "suitableWeather": ["clear", "cloudy", "rain"],
+      "sourceRefs": ["source:demo-singapore-manual"],
+      "updatedAt": "2026-07-28T00:00:00.000Z",
+      "uncertainty": "estimated"
+    },
+    {
+      "id": "poi:singapore-national-gallery",
+      "placeId": "place:sg-singapore",
+      "planningUnitId": "unit:singapore-marina",
+      "names": { "zh-CN": "新加坡国家美术馆", "en": "National Gallery Singapore" },
+      "coordinates": { "lat": 1.2903, "lng": 103.8519 },
+      "categories": ["museum", "art", "culture"],
+      "recommendedDurationMinutes": { "min": 90, "ideal": 120, "max": 180 },
+      "openingHours": {
+        "timezoneId": "Asia/Singapore",
+        "weekly": [
+          { "daysOfWeek": [0, 1, 2, 3, 4, 5, 6], "windows": [{ "start": "10:00", "end": "18:00" }] }
+        ],
+        "uncertainty": "estimated"
+      },
+      "preferredWindows": [{ "start": "10:00", "end": "16:00" }],
+      "reservationRequirement": "recommended",
+      "indoorLevel": "indoor",
+      "accessibility": "accessible",
+      "physicalIntensity": 1,
+      "suitableWeather": ["any"],
+      "sourceRefs": ["source:demo-singapore-manual"],
+      "updatedAt": "2026-07-28T00:00:00.000Z",
+      "uncertainty": "estimated"
+    }
+  ]
+}
