@@ -1,0 +1,37 @@
+name: Format Global Core once
+
+on:
+  push:
+    branches:
+      - refactor/global-core-phase-1
+    paths:
+      - '.github/workflows/format-global-once.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/global-core-phase-1
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - run: npm run format
+      - name: Commit formatting only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps packages fixtures scripts/global tests/global eslint.config.js vitest.config.ts playwright.global.config.ts tsconfig.global.json package.json
+          if git diff --cached --quiet; then
+            echo "No formatting changes."
+            exit 0
+          fi
+          git commit -m "style(global): apply canonical formatting"
+          git push origin HEAD:refactor/global-core-phase-1
