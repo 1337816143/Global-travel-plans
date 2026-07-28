@@ -1,0 +1,7 @@
+{
+  "name": "@global-travel-plans/domain",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts"
+}
