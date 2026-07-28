@@ -1,0 +1,36 @@
+name: Diagnose workspace install
+
+on:
+  push:
+    branches:
+      - refactor/global-core-phase-1
+    paths:
+      - '.github/workflows/diagnose-install.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Capture complete npm diagnostics
+        run: |
+          set +e
+          npm --version > install-diagnostic.log 2>&1
+          npm config list >> install-diagnostic.log 2>&1
+          npm install --ignore-scripts >> install-diagnostic.log 2>&1
+          echo "exit_code=$?" >> install-diagnostic.log
+          cat install-diagnostic.log
+      - name: Upload diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: workspace-install-diagnostic
+          path: install-diagnostic.log
+          if-no-files-found: error
+          retention-days: 7
