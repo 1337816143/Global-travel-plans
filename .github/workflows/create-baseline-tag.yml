@@ -1,0 +1,38 @@
+name: Create immutable Qingdao baseline tag
+
+on:
+  push:
+    branches:
+      - refactor/global-core-phase-1
+    paths:
+      - '.github/workflows/create-baseline-tag.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create baseline tag once
+        env:
+          BASELINE_SHA: 416076e8ea19aa3f19a86faaaa08abfd9d69da90
+          BASELINE_TAG: legacy-qingdao-v2.4-baseline
+        run: |
+          set -euo pipefail
+          git cat-file -e "${BASELINE_SHA}^{commit}"
+          if git rev-parse -q --verify "refs/tags/${BASELINE_TAG}" >/dev/null; then
+            test "$(git rev-list -n 1 "${BASELINE_TAG}")" = "${BASELINE_SHA}"
+            echo "Tag already exists at the required baseline."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${BASELINE_TAG}" "${BASELINE_SHA}" -m "Immutable Qingdao v2.4 baseline before global core refactor"
+          git push origin "refs/tags/${BASELINE_TAG}"
