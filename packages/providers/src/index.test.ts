@@ -8,6 +8,7 @@ import {
   collectCapabilities,
   withProviderTimeout,
   type WeatherObservation,
+  type WeatherProvider,
 } from './index';
 
 const observations: WeatherObservation[] = [
@@ -33,7 +34,7 @@ const observations: WeatherObservation[] = [
 
 describe('provider contracts', () => {
   it('returns unavailable without fabricating data', async () => {
-    const provider = new UnavailableWeatherProvider();
+    const provider: WeatherProvider = new UnavailableWeatherProvider();
     const result = await provider.forecast({
       coordinate: { lat: 36.0671, lng: 120.3826 },
       timezoneId: 'Asia/Shanghai',
