@@ -10,13 +10,17 @@ test('generates the multi-country fixture with explicit degradation', async ({ p
 
   await page.goto('./');
   await expect(page).toHaveTitle(/Global Travel Plans/);
-  await expect(page.getByRole('heading', { name: /全球旅行攻略|Global Travel Plans/ })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: /全球旅行攻略|Global Travel Plans/ }),
+  ).toBeVisible();
   await expect(page.locator('.day-card')).toHaveCount(6);
   await expect(page.locator('.plan-status')).toHaveText('valid');
   await expect(page.getByText('Asia/Shanghai').first()).toBeVisible();
   await expect(page.getByText('Asia/Singapore').first()).toBeVisible();
   await expect(page.getByText(/Provider 能力|Provider capabilities/)).toBeVisible();
-  await expect(page.getByText(/静态部署不保存秘密凭据|static deployment cannot keep secrets/)).toBeVisible();
+  await expect(
+    page.getByText(/静态部署不保存秘密凭据|static deployment cannot keep secrets/),
+  ).toBeVisible();
   await expect(page.locator('.map-canvas')).toBeVisible();
   await expect(page.locator('.leaflet-container')).toBeVisible();
   expect(pageErrors).toEqual([]);

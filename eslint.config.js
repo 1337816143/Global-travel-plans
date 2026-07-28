@@ -18,12 +18,22 @@ export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ['apps/**/*.{ts,tsx}', 'packages/**/*.{ts,tsx}', 'fixtures/**/*.ts', 'scripts/global/**/*.ts', 'tests/global/**/*.ts', '*.config.ts'],
+    files: [
+      'apps/**/*.{ts,tsx}',
+      'packages/**/*.{ts,tsx}',
+      'fixtures/**/*.ts',
+      'scripts/global/**/*.ts',
+      'tests/global/**/*.ts',
+      '*.config.ts',
+    ],
     rules: {
       'no-undef': 'off',
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'varsIgnorePattern': '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
     },
   },
 ];

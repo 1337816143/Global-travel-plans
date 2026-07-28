@@ -10,7 +10,10 @@ import matrix from './travel-time-matrices/qingdao-singapore.json';
 export const demoCatalogRaw: PlanningCatalog = {
   version: 'global-demo-1',
   places: [qingdao.place, singapore.place] as PlanningCatalog['places'],
-  planningUnits: [...qingdao.planningUnits, ...singapore.planningUnits] as PlanningCatalog['planningUnits'],
+  planningUnits: [
+    ...qingdao.planningUnits,
+    ...singapore.planningUnits,
+  ] as PlanningCatalog['planningUnits'],
   pois: [...qingdao.pois, ...singapore.pois] as PlanningCatalog['pois'],
   sources: sources as PlanningCatalog['sources'],
 };

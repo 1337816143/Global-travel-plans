@@ -12,7 +12,8 @@ const placeIds = new Set(catalog.places.map((place) => place.id));
 const errors: string[] = [];
 
 for (const destination of request.destinations) {
-  if (!placeIds.has(destination.placeId)) errors.push(`Unknown destination: ${destination.placeId}`);
+  if (!placeIds.has(destination.placeId))
+    errors.push(`Unknown destination: ${destination.placeId}`);
 }
 for (const poiId of [...request.mustVisitPoiIds, ...request.excludedPoiIds]) {
   if (!poiIds.has(poiId)) errors.push(`Unknown request POI: ${poiId}`);
@@ -24,7 +25,9 @@ for (const entry of matrix.entries) {
     if (!sourceIds.has(sourceRef)) errors.push(`Unknown matrix source: ${sourceRef}`);
   }
   if (entry.method === 'estimate' && entry.confidence === 'high') {
-    errors.push(`Estimated matrix entry cannot be high confidence: ${entry.fromPoiId} -> ${entry.toPoiId}`);
+    errors.push(
+      `Estimated matrix entry cannot be high confidence: ${entry.fromPoiId} -> ${entry.toPoiId}`,
+    );
   }
 }
 
