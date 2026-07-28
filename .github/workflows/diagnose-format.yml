@@ -1,0 +1,33 @@
+name: Diagnose Global formatting
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/diagnose-format.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: List non-formatted files
+        run: |
+          set +e
+          npx prettier --list-different apps packages fixtures scripts/global tests/global *.config.* tsconfig*.json package.json > format-different.txt 2>&1
+          cat format-different.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: global-format-diagnostic
+          path: format-different.txt
+          if-no-files-found: error
+          retention-days: 7
