@@ -1,4 +1,6 @@
 import type { BoundingBox, LocalizedText, Wgs84Coordinate } from '@global-travel-plans/domain';
+import type * as Leaflet from 'leaflet';
+import type { LayerGroup as LeafletLayerGroup, Map as LeafletMap } from 'leaflet';
 
 export interface MapMarker {
   id: string;
@@ -84,9 +86,7 @@ export class MemoryMapAdapter implements MapAdapter {
   }
 }
 
-type LeafletModule = typeof import('leaflet');
-type LeafletMap = import('leaflet').Map;
-type LeafletLayerGroup = import('leaflet').LayerGroup;
+type LeafletModule = typeof Leaflet;
 
 export class LeafletMapAdapter implements MapAdapter {
   readonly id = 'leaflet';
