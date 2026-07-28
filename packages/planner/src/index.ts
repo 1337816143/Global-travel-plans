@@ -492,7 +492,15 @@ function buildTravelLegs(
     const matrixEntry = origin.poiId && destination.poiId
       ? findMatrixEntry(matrix, origin.poiId, destination.poiId, request.transportPreferences)
       : undefined;
-    const durationMinutes = matrixEntry?.durationMinutes ?? (origin.placeId === destination.placeId ? 10 : 60);
+    const stationarySamePlace =
+    origin.placeId === destination.placeId &&
+    !origin.poiId &&
+    !destination.poiId &&
+    origin.kind !== 'transfer' &&
+    destination.kind !== 'transfer';
+  const durationMinutes =
+    matrixEntry?.durationMinutes ??
+    (stationarySamePlace ? 0 : origin.placeId === destination.placeId ? 10 : 60);
     const method = matrixEntry?.method ?? 'estimate';
     const start = timeToMinutes(origin.endTime);
     const end = start + durationMinutes;
