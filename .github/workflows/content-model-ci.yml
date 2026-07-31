@@ -1,0 +1,33 @@
+name: Rich city guide content model
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'packages/content-model/**'
+      - 'package-lock.json'
+      - '.github/workflows/content-model-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  content-model:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install from lockfile
+        run: npm ci --ignore-scripts
+      - name: Lint content model
+        run: npx eslint packages/content-model --max-warnings=0
+      - name: Typecheck all global packages
+        run: npm run typecheck
+      - name: Validate rich guide references
+        run: npx vitest run packages/content-model --config vitest.config.ts
